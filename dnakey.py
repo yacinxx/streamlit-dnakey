@@ -147,7 +147,6 @@ class MenuStart:
     def __init__(self):
         # Calling the time and date to keep you updated
         self.wn = 0
-        self.space = " "
         
     def menu_start(self):
         st.title("DnaKey!")
