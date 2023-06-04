@@ -1,9 +1,3 @@
-# comment 
-#* *TODO 
-#! warning 
-#? test code 
-#// ignore
-
 import streamlit as st
 from cryptography.fernet import Fernet
 import json
@@ -86,7 +80,7 @@ class DnaScript:
     def new_level(self):
         joined_lists = [''.join(sublist) for sublist in self.NEWLEVEL]
         to_be_copied = ''.join(self.hash_text) + ''.join(joined_lists)
-        condition = ["Strong😮", "#ec002b"]
+        condition = ["Strong😮", "#843dff"]
         st.code(f"'TOKEN':['{to_be_copied}', '{condition[0]}']\n"
                 "//Note: You don't have to save this token just remember your key!", 
                 language="javascript")
