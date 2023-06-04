@@ -145,7 +145,6 @@ class DnaScript:
 
 class MenuStart:
     def __init__(self):
-        # Calling the time and date to keep you updated
         self.wn = 0
         
     def menu_start(self):
