@@ -1,0 +1,21 @@
+/*
+-Description
+-What is DnaKey?
+    -DnaKey (Decoding-Numerical-Alphabet-key) is an intelligent program, 
+    designed to simplify the process of using complex passwords. 
+-What DnaKey can do?
+    -Unlike traditional password generators, 
+    DnaKey uses a unique algorithm that does not rely on randomization, 
+    resulting in a consistent and secure password every time. 
+-How DnaKey do it?
+    -The program incorporates an advanced neural network with over 60 neurons, 
+    which enables it to decode complex password patterns 
+    and create a robust password that is difficult to crack.
+-Neural network capabilities?
+     -In addition to its neural network capabilities, 
+     DnaKey also has the ability to generate new, 
+     unique passwords if given more than six characters.
+
+-In summary, DnaKey is a powerful tool that takes the hassle out of password management, 
+providing a simple and effective solution for keeping your online accounts safe and secure.
+*/
