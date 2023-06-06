@@ -10,8 +10,10 @@ import os
 
 load_dotenv()
 
+# Fetch the DNA_KEY value from environment variables
 Dna_key = os.getenv('DNA_KEY')
 
+# Set Streamlit page configuration
 st.set_page_config(
     page_title="Dnakey",
     page_icon="🔐",
@@ -24,10 +26,14 @@ class DnaScript:
     def __init__(self):
         # Instantiate DNAEngine upon object creation
         self.engine = engine.DNAEngine()
+        # List of punctuation symbols for symbol validation
         self.symbols = list(string.punctuation)
+        # Lists for storing letters, hash text, and split prompt words
         self.lett, self.hash_text, self.prompt_list = [], [], []
+        # 2D list for storing DNA levels
         self.NEWLEVEL = [[],[],[],[],[]]
-        self.wp = 0
+        # Counter for current position in the DNA sequence
+        self.wp = 0 # wp -> word position
 
     def dna_main(self, data, prompt):
         self.prompt = prompt
@@ -57,18 +63,21 @@ class DnaScript:
     def check_symbols(self):
         for symbol in self.prompt:
             if symbol in self.symbols:
+                # Display error message for symbols
                 st.error(f"\n'{symbol}' Dnakey does not accept symbols! 🙁")
                 time.sleep(0.5)
                 st.info("If you don't know Dnakey accepts max 11 characters for now + supports numbers [0, 9] and no symbols!", icon="ℹ️")
                 quit()
 
-    def result_prompt(self):  # //sourcery skip: extract-method
+    def result_prompt(self):  
         jhash = ''.join(self.hash_text)
         hash_length = len(self.hash_text)
         condition = ["Weak🙁", "#ffa347"] if hash_length < 4 else ["Medium😎", "#3cb371"]
+        # Display the generated token as code
         st.code(f"'TOKEN':['{jhash}', '{condition[0]}']\n"
                 "//Note: You don't have to save this token just remember your key!", 
                 language="javascript")
+        # Generate and display QR code
         self.qr_code(jhash, condition[1])
         self.hash_text.clear()
     
@@ -80,7 +89,7 @@ class DnaScript:
     def new_level(self):
         joined_lists = [''.join(sublist) for sublist in self.NEWLEVEL]
         to_be_copied = ''.join(self.hash_text) + ''.join(joined_lists)
-        condition = ["Strong😮", "#843dff"]
+        condition = ["Strong😮", "#ec002b"]
         st.code(f"'TOKEN':['{to_be_copied}', '{condition[0]}']\n"
                 "//Note: You don't have to save this token just remember your key!", 
                 language="javascript")
@@ -114,11 +123,14 @@ class DnaScript:
                 self.check_memory()
 
     def qr_code(self, data_qr, color):
+        # File name for the generated QR code image
         self.file_name = "qr_code.png"
+        # Text to be encoded in the QR code
         qr_data_text = f"-TOKEN: {data_qr}"
-        self.color = color
-        self.generate_qr_code(qr_data_text, self.file_name, self.color)
+        # Generate the QR code image
+        self.generate_qr_code(qr_data_text, self.file_name, color)
         st.subheader("DnaKey QR Code", help="You can scan this QR code to see your token in the phone faster!")
+         # Display the generated QR code image
         st.image(image=self.file_name)
         with st.empty():
             for seconds in range(5, -1, -1):
@@ -136,31 +148,40 @@ class DnaScript:
         exit()
 
     def generate_qr_code(self, data, file_name, color):
+        # Generate a QR code with the given data, file name, and color
         qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, 
                            box_size=5, border=7)
         qr.add_data(data)
         qr.make(fit=True)
         self.qr_img = qr.make_image(fill_color=color, back_color="#3c3c3c")
+        # Save the generated QR code image to a file
         self.qr_img.save(file_name)
 
-class MenuStart:
+class main:
     def __init__(self):
         self.wn = 0
-        
+
     def menu_start(self):
+        # Display title
         st.title("DnaKey!")
         with st.sidebar:
+            # Display settings title
             st.title("Settings")
+            # Create new brain input
             self.brain_name = st.text_input("Create New Brain!", placeholder="Example: Emails...")
+
+            # Create new brain button
             if st.button("Create it", key=0) and self.brain_name != "":
                 self.check_brain_data()
                 with st.spinner("Creating the brain please wait..."):
                     time.sleep(2)
                 st.balloons()
                 st.success("The new brain created successfully!")
-
+            # Upload brain file input
             self.uploaded_file = st.file_uploader("Upload your dnakey brain!",
                                                   help="Required a txt file only!")
+            
+            # Verify uploaded file
             if self.uploaded_file:
                 if self.uploaded_file.name.endswith('.txt'):
                     with st.spinner("Verifying the file, please wait..."):
@@ -168,13 +189,15 @@ class MenuStart:
                     st.success("The file data is live...")
                 else:
                     with st.spinner("Verifying the file, please wait..."):
-                        time.sleep(2)
+                           time.sleep(2)
                     st.error("Invalid file format. Please upload a txt file.")
 
-        # Making a while loop to keep asking the user to input something
+        # Input for user key
         self.menu_prompt = st.text_input("Enter Your Key:", max_chars=11, 
                                         help="Note: Dnakey accepts max 11 characters for now + supports numbers [0, 9]!", 
                                         placeholder="Example: Blue / Cat...")
+        
+        # Decode text button
         if st.button("Decode Text", key=1):
             if self.uploaded_file is None:
                 st.error("Please upload your file or create new one!")
@@ -187,6 +210,7 @@ class MenuStart:
             if self.menu_prompt == "":
                 st.error("Please enter your key or create new one!")
 
+        # Display information about DnaKey
         st.text("About DnaKey:")
         with open("info.txt", "r") as f:
                 info = f.read()
@@ -231,8 +255,11 @@ class MenuStart:
             return self.data
         
     def check_brain_data(self):
+        # Create a new instance of DnaScript's engine
         new_brain = DnaScript().engine
+        # Write the DNA brain data to a file
         brain_contents = new_brain.write_dna_brain_to_file(self.brain_name)
+        # Display a download button for the brain data file
         st.download_button(
             label='Download data as txt',
             data=brain_contents,
@@ -240,5 +267,5 @@ class MenuStart:
         )
 
 if __name__ == '__main__':
-    # Start the script
-    MenuStart().menu_start()
+    # Start the app
+    main().menu_start()
