@@ -80,11 +80,6 @@ class DnaScript:
         # Generate and display QR code
         self.qr_code(jhash, condition[1])
         self.hash_text.clear()
-    
-    def check_memory(self):
-        st.error("\nDATA OUT OF MEMORY!")
-        st.error("\nERROR: Sorry, you entered more than 11 letters/digits!")
-        quit()
 
     def new_level(self):
         joined_lists = [''.join(sublist) for sublist in self.NEWLEVEL]
@@ -122,6 +117,11 @@ class DnaScript:
             if len(self.lett) >= 12:
                 self.check_memory()
 
+    def check_memory(self):
+        st.error("\nDATA OUT OF MEMORY!")
+        st.error("\nERROR: Sorry, you entered more than 11 letters/digits!")
+        quit()    
+      
     def qr_code(self, data_qr, color):
         # File name for the generated QR code image
         self.file_name = "qr_code.png"
